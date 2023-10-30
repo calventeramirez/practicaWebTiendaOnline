@@ -26,7 +26,7 @@ CREATE TABLE cestas(
 CREATE TABLE productosCestas(
 	idProducto INTEGER(8),
     idCesta INTEGER(8),
-    cantidad NUMERIC(2,0),
+    cantidad NUMERIC(2,0) NOT NULL,
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto),
     FOREIGN KEY (idCesta) REFERENCES cestas(idCesta),
     CONSTRAINT PK_ProductoCesta PRIMARY KEY(idProducto, idCesta)
