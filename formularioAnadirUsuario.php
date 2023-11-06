@@ -127,9 +127,9 @@
         if (isset($usuario) && isset($contrasena) && isset($fecha_nacimiento)) {
             echo "<h3>Se ha registrado correctamente</h3>";
             $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fecha_nacimiento')";
-
+            $sql2 = "INSERT INTO cestas (usuario, precioTotal) VALUES ('$usuario', 0)";
             $conexion->query($sql);
-            
+            $conexion->query($sql2);
         }
         ?>
     </div>
