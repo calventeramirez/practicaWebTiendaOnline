@@ -128,7 +128,6 @@
             $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fechaNacimiento')";
 
             $conexion->query($sql);
-            echo "<h3>Se ha registrado correctamente</h3>";
         }
         ?>
     </div>
