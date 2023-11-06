@@ -37,7 +37,7 @@
                     if(strlen($temp_usuario) < 4  || strlen($temp_usuario) > 12){
                         $err_usuario = "No puede contener menos de 4 caracteres ni más de 12";
                     }else{
-                        $patron = "/^[a-zA-Z\_]$/";
+                        $patron = "/^[a-zA-Z_]{4,12}$/";
                         if(!preg_match($patron, $temp_usuario)){
                             $err_usuario = "El usuario debe tener entre 4 y 12 caracteres , letras de la A a la Z y guiones bajos";
                         }else{
@@ -57,7 +57,8 @@
                     if(strlen($temp_contrasena) > 255){
                         $err_contrasena = "No puede contener más de 255 caracteres";
                     }else{
-                        $contrasena = $temp_contrasena;
+                        $contrasenaCifrada = password_hash($temp_contrasena, PASSWORD_DEFAULT);
+                        $contrasena = $contrasenaCifrada;
                     }
                 }
 
@@ -124,9 +125,10 @@
         </form>
         <?php
         if (isset($usuario) && isset($contrasena) && isset($fechaNacimiento)) {
-            $sql = "INSERT INTO productos (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fechaNacimiento')";
+            $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fechaNacimiento')";
 
             $conexion->query($sql);
+            echo "<h3>Se ha registrado correctamente</h3>";
         }
         ?>
     </div>

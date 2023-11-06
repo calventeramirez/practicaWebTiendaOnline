@@ -42,7 +42,7 @@
                 if(strlen($temp_nombre) > 40){
                     $err_nombre = "No puede contener más de 40 caracteres";
                 }else{
-                    $patron ="/^[a-zA-Z0-9][a-zA-Z0-9 ]+[a-zA-Z0-9]$/";
+                    $patron ="/^[a-zA-Z0-9\s]{1,40}$/";
                     if(!preg_match($patron,$temp_nombre)){
                         $err_nombre = "El nombre debe tener menos de 40 caracteres";
                     }else{
@@ -137,6 +137,8 @@
                 $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad) VALUES ('$nombre', '$precio', '$descripcion', '$cantidad')";
 
                 $conexion -> query($sql);
+
+                echo "<h3>Producto introducido correctamente</h3>";
             }
         ?>
     </div>
