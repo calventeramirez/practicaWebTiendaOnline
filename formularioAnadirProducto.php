@@ -134,11 +134,10 @@
         </form>
         <?php
             if(isset($nombre) && isset($precio) && isset($descripcion) && isset($cantidad)){
+                echo "<h3>Producto introducido correctamente</h3>";
                 $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad) VALUES ('$nombre', '$precio', '$descripcion', '$cantidad')";
 
                 $conexion -> query($sql);
-
-                echo "<h3>Producto introducido correctamente</h3>";
             }
         ?>
     </div>

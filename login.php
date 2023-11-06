@@ -28,7 +28,7 @@
         $resultado = $conexion->query($sql);
 
         while ($fila = $resultado->fetch_assoc()) {
-            $contrasenaCifrada = $fila['$contrasena'];
+            $contrasenaCifrada = $fila['contrasena'];
         }
         if ($resultado->num_rows == 0) {
     ?>
@@ -46,7 +46,7 @@
             } else {
             ?>
                 <div class="alert alert-danger" role="alert">
-                    No nos hemos podido validar.
+                    Contraseña no valida
                 </div>
     <?php
             }

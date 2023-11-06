@@ -124,10 +124,12 @@
             <button type="submit" class="btn btn-primary">Añadir</button>
         </form>
         <?php
-        if (isset($usuario) && isset($contrasena) && isset($fechaNacimiento)) {
-            $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fechaNacimiento')";
+        if (isset($usuario) && isset($contrasena) && isset($fecha_nacimiento)) {
+            echo "<h3>Se ha registrado correctamente</h3>";
+            $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$contrasena', '$fecha_nacimiento')";
 
             $conexion->query($sql);
+            
         }
         ?>
     </div>
