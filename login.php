@@ -41,7 +41,7 @@
             if ($accesoValido) {
                 echo "Validado correctamente";
                 session_start();
-                $_SESSION["usuario"] = $usuario;
+                $_SESSION["usuario"] = $temp_usuario;
                 header("Location: index.php");
             } else {
             ?>
