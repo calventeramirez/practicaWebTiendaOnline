@@ -37,6 +37,11 @@
             $temp_cantidad = "";
         }
 
+        $nombre_imagen = $_FILES["imagen"]["name"];
+        $ruta_temp = $_FILES["imagen"]["tmp_name"];
+        $ruta_final = "img/" . $nombre_imagen;
+        move_uploaded_file($ruta_temp, $ruta_final);
+
         //Validacion y patrón de nombre
         if (!strlen($temp_nombre) > 0) {
             $err_nombre = "Error. El nombre es obligatorio";
@@ -91,7 +96,7 @@
     ?>
     <div class=container>
         <h1>Formulario Añadir Producto</h1>
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
             <div clas="mb-3">
                 <label for="nombre" class="form-label">Nombre:</label>
                 <input type="text" name="nombre" id="nombre" placeholder="Nombre del producto" class="form-control">
@@ -128,12 +133,16 @@
                 }
                 ?>
             </div>
+            <div class="mb-3">
+                <label for="imagen" class="form-label">Imagen:</label>
+                <input type="file" name="imagen" id="imagen" class="form-control">
+            </div>
             <button type="submit" class="btn btn-primary">Añadir</button>
         </form>
         <?php
         if (isset($nombre) && isset($precio) && isset($descripcion) && isset($cantidad)) {
             echo "<h3>Producto introducido correctamente</h3>";
-            $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad) VALUES ('$nombre', '$precio', '$descripcion', '$cantidad')";
+            $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad, imagen) VALUES ('$nombre', '$precio', '$descripcion', '$cantidad', '$ruta_final')";
 
             $conexion->query($sql);
         }
