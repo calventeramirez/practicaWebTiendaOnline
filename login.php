@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <?php require "depurar.php" ?>
     <?php require "conecta_bbdd.php" ?>
+    <link rel="stylesheet" href="CSS/estilos.css">
 </head>
 
 <body>
@@ -54,7 +55,21 @@
     }
     ?>
     <div class="container">
-        <h1>LOGIN</h1>
+        <h1>Login</h1>
+        <nav class="navigator">
+            <ul>
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
+                <?php
+                    session_start();
+                    if(!isset($_SESSION["usuario"]))
+                        echo "<li><a href='login.php'>Login</a></li>";
+                    else
+                    echo "<li><a href='logout.php'>Logout</a></li>";  
+                ?>
+            </ul>
+        </nav>
         <form method="post" action="">
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario: </label>
