@@ -16,6 +16,8 @@ CREATE TABLE productos(
     cantidad NUMERIC(5, 0) NOT NULL
 );
 
+ALTER TABLE productos ADD COLUMN imagen VARCHAR(100);
+
 CREATE TABLE cestas(
 	idCesta INTEGER(8) PRIMARY KEY AUTO_INCREMENT,
     usuario VARCHAR(12) NOT NULL,
