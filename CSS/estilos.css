@@ -22,7 +22,13 @@
     text-decoration: none;
 }
 
+/*
 .navigator li a:hover:not(.active){
+    background-color: #111;
+}
+*/
+
+.navigator li a:hover{
     background-color: #111;
 }
 
