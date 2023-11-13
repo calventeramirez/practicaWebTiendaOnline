@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <?php require "conecta_bbdd.php" ?>
-    <?php require "Objetos/producto.php" ?>
-    <link rel="stylesheet" href="CSS/estilos.css">
+    <?php require "../util/conecta_bbdd.php" ?>
+    <?php require "../util/producto.php" ?>
+    <link rel="stylesheet" href="styles/estilos.css">
 </head>
 
 <body>
@@ -25,24 +25,26 @@
     <div class="container">
         <h1>Inicio</h1>
         <?php
-            session_start();
-            if(isset($_SESSION["usuario"])){
-                echo "<h2>Bienvenido " . $_SESSION["usuario"] . "</h2>";
-            }
+        session_start();
+        if (isset($_SESSION["usuario"])) {
+            echo "<h2>Bienvenido " . $_SESSION["usuario"] . "</h2>";
+        }
         ?>
-        <nav class = "navigator">
-            <ul>
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
-                <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
-                <?php
-                    if(!isset($_SESSION["usuario"]))
+        <header>
+            <nav class="navigator">
+                <ul>
+                    <li><a href="index.php">Inicio</a></li>
+                    <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                    <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
+                    <?php
+                    if (!isset($_SESSION["usuario"]))
                         echo "<li><a href='login.php'>Login</a></li>";
                     else
-                        echo "<li><a href='logout.php'>Logout</a></li>"; 
-                ?>
-            </ul>
-        </nav>
+                        echo "<li><a href='logout.php'>Logout</a></li>";
+                    ?>
+                </ul>
+            </nav>
+        </header> 
         <table class="table table-secondary table-hover">
             <thead class="table table-striped">
                 <tr>

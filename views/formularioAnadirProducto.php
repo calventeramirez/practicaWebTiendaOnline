@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Producto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <?php require "depurar.php" ?>
-    <?php require "conecta_bbdd.php" ?>
-    <link rel="stylesheet" href="CSS/estilos.css">
+    <?php require "../util/depurar.php" ?>
+    <?php require "../util/conecta_bbdd.php" ?>
+    <link rel="stylesheet" href="styles/estilos.css">
 </head>
 
 <body>
@@ -40,7 +40,7 @@
 
         $nombre_imagen = $_FILES["imagen"]["name"];
         $ruta_temp = $_FILES["imagen"]["tmp_name"];
-        $ruta_final = "img/" . $nombre_imagen;
+        $ruta_final = "images/" . $nombre_imagen;
         move_uploaded_file($ruta_temp, $ruta_final);
 
         //Validacion y patrón de nombre
