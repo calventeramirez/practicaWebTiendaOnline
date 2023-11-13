@@ -13,6 +13,10 @@
 
 <body>
     <?php
+    session_start();
+    if($_SESSION["rol"] != "admin"){
+        header("Location: index.php");
+    }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["nombre"])) {
             $temp_nombre = depurar($_POST["nombre"]);
@@ -101,10 +105,13 @@
         <nav class="navigator">
             <ul>
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                <?php 
+                    if($_SESSION["rol"] == "admin")
+                        echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                ?>
+                
                 <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
                 <?php
-                    session_start();
                     if(!isset($_SESSION["usuario"]))
                         echo "<li><a href='login.php'>Login</a></li>";
                     else

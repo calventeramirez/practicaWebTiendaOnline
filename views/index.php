@@ -13,6 +13,7 @@
 
 <body>
     <?php
+    session_start();
     $sql = "SELECT * FROM productos";
     $resultado = $conexion->query($sql);
     $productos = [];
@@ -25,7 +26,6 @@
     <div class="container">
         <h1>Inicio</h1>
         <?php
-        session_start();
         if (isset($_SESSION["usuario"])) {
             echo "<h2>Bienvenido " . $_SESSION["usuario"] . "</h2>";
         }
@@ -34,7 +34,12 @@
             <nav class="navigator">
                 <ul>
                     <li><a href="index.php">Inicio</a></li>
-                    <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                    <?php
+                    if (isset($_SESSION["rol"])) {
+                        if ($_SESSION["rol"] == "admin")
+                            echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                    }
+                    ?>
                     <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
                     <?php
                     if (!isset($_SESSION["usuario"]))
@@ -44,7 +49,7 @@
                     ?>
                 </ul>
             </nav>
-        </header> 
+        </header>
         <table class="table table-secondary table-hover">
             <thead class="table table-striped">
                 <tr>

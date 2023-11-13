@@ -24,12 +24,12 @@
         } else {
             $temp_contrasena = "";
         }
-
         $sql = "SELECT * FROM usuarios WHERE usuario = '$temp_usuario'";
         $resultado = $conexion->query($sql);
 
         while ($fila = $resultado->fetch_assoc()) {
             $contrasenaCifrada = $fila['contrasena'];
+            $rol = $fila['rol'];
         }
         if ($resultado->num_rows == 0) {
     ?>
@@ -43,6 +43,7 @@
                 echo "Validado correctamente";
                 session_start();
                 $_SESSION["usuario"] = $temp_usuario;
+                $_SESSION["rol"] = $rol;
                 header("Location: index.php");
             } else {
             ?>
@@ -59,7 +60,12 @@
         <nav class="navigator">
             <ul>
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                <?php 
+                    if(isset($_SESSION["rol"])){
+                        if($_SESSION["rol"] == "admin")
+                        echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                    }
+                     ?>
                 <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
                 <?php
                     session_start();

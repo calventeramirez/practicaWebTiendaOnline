@@ -14,97 +14,102 @@
 <body>
     <div class=container>
         <?php
-            if($_SERVER["REQUEST_METHOD"] == "POST"){
-                if(isset($_POST["usuario"])){
-                    $temp_usuario = depurar($_POST["usuario"]);
-                }else{
-                    $temp_usuario = "";
-                }
-                if(isset($_POST["contrasena"])){
-                    $temp_contrasena = depurar($_POST["contrasena"]);
-                }else{
-                    $temp_contrasena = "";
-                }
-                if(isset($_POST["fechaNacimiento"])){
-                    $temp_fechaNacimiento = depurar($_POST["fechaNacimiento"]);
-                }else{
-                    $temp_fechaNacimiento = "";
-                }
+        session_start();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST["usuario"])) {
+                $temp_usuario = depurar($_POST["usuario"]);
+            } else {
+                $temp_usuario = "";
+            }
+            if (isset($_POST["contrasena"])) {
+                $temp_contrasena = depurar($_POST["contrasena"]);
+            } else {
+                $temp_contrasena = "";
+            }
+            if (isset($_POST["fechaNacimiento"])) {
+                $temp_fechaNacimiento = depurar($_POST["fechaNacimiento"]);
+            } else {
+                $temp_fechaNacimiento = "";
+            }
 
-                //Validacion y patrón de usuario
-                if(!strlen($temp_usuario) > 0){
-                    $err_usuario = "Error. El usuario es obligatorio";
-                }else{
-                    if(strlen($temp_usuario) < 4  || strlen($temp_usuario) > 12){
-                        $err_usuario = "No puede contener menos de 4 caracteres ni más de 12";
-                    }else{
-                        $patron = "/^[a-zA-Z_]{4,12}$/";
-                        if(!preg_match($patron, $temp_usuario)){
-                            $err_usuario = "El usuario debe tener entre 4 y 12 caracteres , letras de la A a la Z y guiones bajos";
-                        }else{
-                            if(strlen($temp_usuario) < 4 || strlen($temp_usuario) > 12){
-                                $err_usuario = "No puede contener menos de 4 caracteres ni más de 12";
-                            }else{
-                                $usuario = $temp_usuario;
-                            }
-                        }
-                    }
-                }
-
-                //Validacion de contraseña
-                if(!strlen($temp_contrasena) > 0){
-                    $err_contrasena = "Error. La contraseña debe existir";
-                }else{
-                    if(strlen($temp_contrasena) > 255){
-                        $err_contrasena = "No puede contener más de 255 caracteres";
-                    }else{
-                        $contrasenaCifrada = password_hash($temp_contrasena, PASSWORD_DEFAULT);
-                        $contrasena = $contrasenaCifrada;
-                    }
-                }
-
-                //Validacion de fecha de nacimiento
-                if (strlen($temp_fechaNacimiento) == 0){
-                    $err_fechaNacimiento = "La fecha de nacimiento es obligatoria";
-                }else{
-                    $fecha_actual = date("Y-m-d"); //cojo la fecha actual
-                    list($anyo_actual, $mes_actual, $dia_actual) = explode("-", $fecha_actual);
-                    list($anyo, $mes, $dia) = explode("-", $temp_fechaNacimiento);
-                    if(($anyo_actual-$anyo > 12) && ($anyo_actual - $anyo < 120)){
-                        //es mayor de edad
-                        $fecha_nacimiento = $temp_fechaNacimiento;
-                    }else if(($anyo_actual - $anyo) < 12 || ($anyo_actual - $anyo) > 120){
-                        $err_fechaNacimiento = "No puede ser menor de 12 años ni mayor de 120";
-                    }else{
-                        if($mes_actual - $mes > 0){
-                            //mayor de edad
-                            $fecha_nacimiento = $temp_fechaNacimiento;
-                        }else if($mes_actual - $mes < 0){
-                            $err_fechaNacimiento = "No puedes ser menor de 12 años ni mayor de 120";
-                        }else{
-                            if($dia_actual - $dia >= 0){
-                                //exito
-                                $fecha_nacimiento = $temp_fechaNacimiento;
-                            }else{
-                                $err_fechaNacimiento = "No puedes ser menor de 12 años ni mayor de 120";
-                            }
+            //Validacion y patrón de usuario
+            if (!strlen($temp_usuario) > 0) {
+                $err_usuario = "Error. El usuario es obligatorio";
+            } else {
+                if (strlen($temp_usuario) < 4  || strlen($temp_usuario) > 12) {
+                    $err_usuario = "No puede contener menos de 4 caracteres ni más de 12";
+                } else {
+                    $patron = "/^[a-zA-Z_]{4,12}$/";
+                    if (!preg_match($patron, $temp_usuario)) {
+                        $err_usuario = "El usuario debe tener entre 4 y 12 caracteres , letras de la A a la Z y guiones bajos";
+                    } else {
+                        if (strlen($temp_usuario) < 4 || strlen($temp_usuario) > 12) {
+                            $err_usuario = "No puede contener menos de 4 caracteres ni más de 12";
+                        } else {
+                            $usuario = $temp_usuario;
                         }
                     }
                 }
             }
+
+            //Validacion de contraseña
+            if (!strlen($temp_contrasena) > 0) {
+                $err_contrasena = "Error. La contraseña debe existir";
+            } else {
+                if (strlen($temp_contrasena) > 255) {
+                    $err_contrasena = "No puede contener más de 255 caracteres";
+                } else {
+                    $contrasenaCifrada = password_hash($temp_contrasena, PASSWORD_DEFAULT);
+                    $contrasena = $contrasenaCifrada;
+                }
+            }
+
+            //Validacion de fecha de nacimiento
+            if (strlen($temp_fechaNacimiento) == 0) {
+                $err_fechaNacimiento = "La fecha de nacimiento es obligatoria";
+            } else {
+                $fecha_actual = date("Y-m-d"); //cojo la fecha actual
+                list($anyo_actual, $mes_actual, $dia_actual) = explode("-", $fecha_actual);
+                list($anyo, $mes, $dia) = explode("-", $temp_fechaNacimiento);
+                if (($anyo_actual - $anyo > 12) && ($anyo_actual - $anyo < 120)) {
+                    //es mayor de edad
+                    $fecha_nacimiento = $temp_fechaNacimiento;
+                } else if (($anyo_actual - $anyo) < 12 || ($anyo_actual - $anyo) > 120) {
+                    $err_fechaNacimiento = "No puede ser menor de 12 años ni mayor de 120";
+                } else {
+                    if ($mes_actual - $mes > 0) {
+                        //mayor de edad
+                        $fecha_nacimiento = $temp_fechaNacimiento;
+                    } else if ($mes_actual - $mes < 0) {
+                        $err_fechaNacimiento = "No puedes ser menor de 12 años ni mayor de 120";
+                    } else {
+                        if ($dia_actual - $dia >= 0) {
+                            //exito
+                            $fecha_nacimiento = $temp_fechaNacimiento;
+                        } else {
+                            $err_fechaNacimiento = "No puedes ser menor de 12 años ni mayor de 120";
+                        }
+                    }
+                }
+            }
+        }
         ?>
         <h1>Formulario Añadir Usuario</h1>
-        <nav class = "navigator">
+        <nav class="navigator">
             <ul>
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="formularioAnadirProducto.php">Añadir Productos</a></li>
+                <?php
+                if (isset($_SESSION["rol"])) {
+                    if ($_SESSION["rol"] == "admin")
+                        echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                }
+                ?>
                 <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
                 <?php
-                    session_start();
-                    if(!isset($_SESSION["usuario"]))
-                        echo "<li><a href='login.php'>Login</a></li>";
-                    else
-                        echo "<li><a href='logout.php'>Logout</a></li>"; 
+                if (!isset($_SESSION["usuario"]))
+                    echo "<li><a href='login.php'>Login</a></li>";
+                else
+                    echo "<li><a href='logout.php'>Logout</a></li>";
                 ?>
             </ul>
         </nav>
