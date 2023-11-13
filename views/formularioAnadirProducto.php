@@ -108,13 +108,11 @@
                 <?php 
                     if($_SESSION["rol"] == "admin")
                         echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
-                ?>
                 
-                <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
-                <?php
-                    if(!isset($_SESSION["usuario"]))
+                    if (!isset($_SESSION["usuario"])){
                         echo "<li><a href='login.php'>Login</a></li>";
-                    else
+                        echo "<li><a href='formularioAnadirUsuario.php'> Añadir Usuario</a></li>";                    
+                    }else
                         echo "<li><a href='logout.php'>Logout</a></li>";  
                 ?>
             </ul>

@@ -13,6 +13,7 @@
 
 <body>
     <?php
+     session_start();
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["usuario"])) {
             $temp_usuario = depurar($_POST["usuario"]);
@@ -65,13 +66,11 @@
                         if($_SESSION["rol"] == "admin")
                         echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
                     }
-                     ?>
-                <li><a href="formularioAnadirUsuario.php"> Añadir Usuario</a></li>
-                <?php
-                    session_start();
-                    if(!isset($_SESSION["usuario"]))
+                   
+                    if (!isset($_SESSION["usuario"])){
                         echo "<li><a href='login.php'>Login</a></li>";
-                    else
+                        echo "<li><a href='formularioAnadirUsuario.php'> Añadir Usuario</a></li>";                    
+                    }else
                     echo "<li><a href='logout.php'>Logout</a></li>";  
                 ?>
             </ul>
