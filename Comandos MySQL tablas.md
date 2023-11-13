@@ -8,6 +8,8 @@ CREATE TABLE usuarios (
     fechaNacimiento DATE NOT NULL
 );
 
+ALTER TABLE usuarios ADD COLUMN rol VARCHAR(10) DEFAULT 'cliente';
+
 CREATE TABLE productos(
 	idProducto INTEGER(8) PRIMARY KEY AUTO_INCREMENT,
     nombreProducto VARCHAR(40) NOT NULL,
