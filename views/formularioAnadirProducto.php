@@ -103,20 +103,26 @@
     <div class=container>
         <h1>Formulario Añadir Producto</h1>
         <nav class="navigator">
-            <ul>
-                <li><a href="index.php">Inicio</a></li>
-                <?php 
-                    if($_SESSION["rol"] == "admin")
-                        echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
-                
+                <ul>
+                    <li><a href="index.php">Inicio</a></li>
+                    <?php
+                    if (isset($_SESSION["rol"])) {
+                        if ($_SESSION["rol"] == "admin")
+                            echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                    }
+                    ?>
+                    
+                    <?php
                     if (!isset($_SESSION["usuario"])){
                         echo "<li><a href='login.php'>Login</a></li>";
                         echo "<li><a href='formularioAnadirUsuario.php'> Añadir Usuario</a></li>";                    
-                    }else
-                        echo "<li><a href='logout.php'>Logout</a></li>";  
-                ?>
-            </ul>
-        </nav>
+                    }else{
+                        echo "<li><a href='cesta.php'>Cesta</a></li>";
+                        echo "<li><a href='logout.php'>Logout</a></li>";
+                    }
+                    ?>
+                </ul>
+            </nav>
         <form method="POST" action="" enctype="multipart/form-data">
             <div clas="mb-3">
                 <label for="nombre" class="form-label">Nombre:</label>

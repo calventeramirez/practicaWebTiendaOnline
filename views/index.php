@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <?php require "../util/conecta_bbdd.php" ?>
     <?php require "../util/producto.php" ?>
+    <?php require "../util/depurar.php" ?>
     <link rel="stylesheet" href="styles/estilos.css">
 </head>
 
@@ -20,6 +21,40 @@
     while ($fila = $resultado->fetch_assoc()) {
         $nuevo_producto = new Producto($fila["idProducto"], $fila["nombreProducto"], $fila["precio"], $fila["descripcion"], $fila["cantidad"], $fila["imagen"]);
         array_push($productos, $nuevo_producto);
+    }
+
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        if(isset($_POST["idProducto"])){
+            $idProducto = depurar($_POST["idProducto"]);
+            $usuario = $_SESSION["usuario"];
+            $sql2 = "SELECT * FROM cestas WHERE usuario = '$usuario'";
+            $resultado = $conexion->query($sql2);
+            $idCesta = -1;
+            $temp_cantidad = depurar($_POST["cantidad"]);
+
+            //Compruebo cantidad
+            if($temp_cantidad <= 0 || $temp_cantidad > 5){
+                $err_cantidad = "La cantidad debe ser entre 1 y 5";
+            }else{
+                $cantidad = $temp_cantidad;
+            }
+
+            while($fila = $resultado->fetch_assoc()){
+               $idCesta = $fila["idCesta"];
+            }
+
+            if($idCesta != -1 && isset($cantidad)){
+                $sqlInsertarCesta = "INSERT INTO productosCestas (idProducto, idCesta, cantidad) VALUES ($idProducto, $idCesta, $cantidad)";
+                $resultado = $conexion->query($sqlInsertarCesta);
+                $acierto ="Producto añadido a la cesta";
+                $sqlAux = "SELECT precio FROM productos WHERE idProducto = '$idProducto'";
+                $res_precio = $conexion->query($sqlAux);
+                $fila_precio =  $res_precio->fetch_assoc();
+                $precio = $fila_precio["precio"];
+                $sqlPrecioTotal = "UPDATE Cestas SET precioTotal = precioTotal + ($precio * $cantidad) WHERE idCesta = $idCesta";
+                $conexion-> query($sqlPrecioTotal);
+            }
+        }
     }
     ?>
 
@@ -45,12 +80,28 @@
                     if (!isset($_SESSION["usuario"])){
                         echo "<li><a href='login.php'>Login</a></li>";
                         echo "<li><a href='formularioAnadirUsuario.php'> Añadir Usuario</a></li>";                    
-                    }else
+                    }else{
+                        echo "<li><a href='cesta.php'>Cesta</a></li>";
                         echo "<li><a href='logout.php'>Logout</a></li>";
+                    }
                     ?>
                 </ul>
             </nav>
         </header>
+        <?php
+            if(isset($err_cantidad)){?>
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $err_cantidad; ?>
+                </div>
+            <?php
+            }
+            if(isset($acierto)){?>
+                <div class="alert alert-success" role="alert">
+                    <?php echo $acierto; ?>
+                </div>
+            <?php
+            }
+        ?>
         <table class="table table-secondary table-hover">
             <thead class="table table-striped">
                 <tr>
@@ -60,20 +111,43 @@
                     <th>Descripcion</th>
                     <th>Cantidad</th>
                     <th>Imagen</th>
+                    <?php
+                        if(isset($_SESSION["usuario"])){
+                            echo"<th></th>";
+                        }
+                    ?>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                foreach ($productos as $producto) {
-                    echo "<tr>";
-                    echo "<td>" . $producto->idProducto . "</td>";
-                    echo "<td>" . $producto->nombreProducto . "</td>";
-                    echo "<td>" . $producto->precio . "</td>";
-                    echo "<td>" . $producto->descripcion . "</td>";
-                    echo "<td>" . $producto->cantidad . "</td>";
-                    echo "<td><img src = '" . $producto->imagen . "' alt ='' width = '50%' heigth = '50%'></td>";
-                    echo "</tr>";
-                }
+                foreach ($productos as $producto) {?>
+                    <tr>
+                    <td><?php echo $producto->idProducto; ?></td>
+                    <td><?php echo $producto->nombreProducto; ?></td>
+                    <td><?php echo $producto->precio; ?></td>
+                    <td><?php echo $producto->descripcion; ?></td>
+                    <td><?php echo $producto->cantidad; ?></td>
+                    <td><img src =  "<?php echo $producto->imagen; ?>"  alt ='' width = '50%' heigth = '50%'></td>
+                    <?php
+                    if(isset($_SESSION["usuario"])){?>
+                    <td>
+                        <form action = "" method="post">
+                            <input type="hidden" name="idProducto" value="<?php echo $producto->idProducto; ?>">
+                            <select name = "cantidad" class="form-select">
+                                <option selected value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <input type="submit" name="Añadir" value="Añadir" class="btn btn-warning">
+                        </form>
+                    </td>
+                    <?php
+                    }
+                    ?>
+                    </tr>
+                <?php }
                 ?>
             </tbody>
         </table>
