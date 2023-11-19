@@ -2,7 +2,6 @@
     session_start();
     require "../util/conecta_bbdd.php";
     $id = $_POST["id"];
-    echo "<p>$id</p>";
     $precio = $_POST["precioTotal"];
     $idCesta = $_POST["idCesta"];
     $usuario = $_SESSION["usuario"];

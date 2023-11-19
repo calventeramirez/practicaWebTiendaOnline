@@ -16,6 +16,7 @@
     session_start();
     if(isset($_SESSION["usuario"])){
         $usuario = $_SESSION["usuario"];
+        $numeroProductos = 0;
         $sql1 = "SELECT * FROM Cestas WHERE usuario = '$usuario'";
         $resultado = $conexion -> query($sql1);
        
@@ -31,6 +32,7 @@
         while($fila = $resultado2 -> fetch_assoc()){
             $nuevo_producto = new productoCesta($fila["nombre"], $fila["precio"], $fila["imagen"], $fila["cantidad"]);
             array_push($productos, $nuevo_producto);
+            $numeroProductos++;
         }
     }
     ?>
@@ -117,6 +119,12 @@
                     </tr>
                 </tfoot>
             </table>
+            <form method="post" action="realizarPedido.php">
+                <input type="hidden" name="precioTotal" value ="<?php echo $precioTotal ?>">
+                <input type="hidden" name="idCesta" value="<?php echo $idCesta ?>">
+                <input type="hidden" name="numeroProductos" value="<?php echo $numeroProductos ?>">
+                <input type="submit" name="ENVIAR" value="Realizar el pago" class="btn btn-success">
+            </form>
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
