@@ -42,10 +42,14 @@
             $temp_cantidad = "";
         }
 
+        if(isset($_FILES["imagen"])){
+            $temp_imagen = $_FILES["imagen"];
+        }else{
+            $temp_imagen = "";
+        }
+
         $nombre_imagen = $_FILES["imagen"]["name"];
-        $ruta_temp = $_FILES["imagen"]["tmp_name"];
         $ruta_final = "images/" . $nombre_imagen;
-        move_uploaded_file($ruta_temp, $ruta_final);
 
         //Validacion y patrón de nombre
         if (!strlen($temp_nombre) > 0) {
@@ -97,6 +101,22 @@
                 $cantidad = $temp_cantidad;
             }
         }
+
+        //Validacion de imagen
+        if(!isset($nombre_imagen)){
+            $err_imagen = "Error. La imagen debe existir";
+        }else{
+            $ruta_temp = $_FILES["imagen"]["tmp_name"];
+            if(!($_FILES['imagen']['size'] < 1048576)){
+                $err_imagen = "Error. La imagen debe tener un tamaño menor a 1MB";
+            }else{
+                if(!(in_array($_FILES['imagen']['type'], ["image/jpg", "image/jpeg", "image/png"]))){
+                    $err_imagen = "Error. La imagen debe ser jpg, jpeg, png.";
+                }else{
+                    move_uploaded_file($ruta_temp, $ruta_final);
+                }
+            }
+        }
         
     }
     ?>
@@ -107,8 +127,10 @@
                     <li><a href="index.php">Inicio</a></li>
                     <?php
                     if (isset($_SESSION["rol"])) {
-                        if ($_SESSION["rol"] == "admin")
+                        if ($_SESSION["rol"] == "admin"){
                             echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                            echo "<li><a href='modificarCantidadProductos.php'>Modicar Cantidad de Productos</a></li>";
+                        }
                     }
                     ?>
                     
@@ -163,11 +185,16 @@
             <div class="mb-3">
                 <label for="imagen" class="form-label">Imagen:</label>
                 <input type="file" name="imagen" id="imagen" class="form-control">
+                <?php
+                if (isset($err_imagen)) {
+                    echo $err_imagen;
+                }
+                ?>
             </div>
             <button type="submit" class="btn btn-primary">Añadir</button>
         </form>
         <?php
-        if (isset($nombre) && isset($precio) && isset($descripcion) && isset($cantidad)) {
+        if (isset($nombre) && isset($precio) && isset($descripcion) && isset($cantidad) && isset($ruta_final) && !isset($err_imagen)) {
             echo "<h3>Producto introducido correctamente</h3>";
             $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad, imagen) VALUES ('$nombre', '$precio', '$descripcion', '$cantidad', '$ruta_final')";
 

@@ -51,8 +51,10 @@
                     <li><a href="index.php">Inicio</a></li>
                     <?php
                     if (isset($_SESSION["rol"])) {
-                        if ($_SESSION["rol"] == "admin")
+                        if ($_SESSION["rol"] == "admin"){
                             echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                            echo "<li><a href='modificarCantidadProductos.php'>Modicar Cantidad de Productos</a></li>";
+                        }
                     }
                     ?>
 

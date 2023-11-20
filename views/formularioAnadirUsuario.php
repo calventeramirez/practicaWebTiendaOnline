@@ -59,8 +59,14 @@
                 if (strlen($temp_contrasena) > 255) {
                     $err_contrasena = "No puede contener más de 255 caracteres";
                 } else {
-                    $contrasenaCifrada = password_hash($temp_contrasena, PASSWORD_DEFAULT);
-                    $contrasena = $contrasenaCifrada;
+                    $pattern = "/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,20}$/";
+                    // Al menos una letra minusculas, una mayuscula, al menos un numero, al menos un caracter especial y entre 8 y 20 caracteres 
+                    if(!preg_match($pattern, $temp_contrasena)){
+                        $err_contrasena = "La contraseña debe contener al menos una letra minuscula, una mayuscula, un numero, un caracter especial y entre 8 y 20 caracteres";
+                    }else{
+                       $contrasenaCifrada = password_hash($temp_contrasena, PASSWORD_DEFAULT);
+                        $contrasena = $contrasenaCifrada;
+                    }
                 }
             }
 
@@ -100,8 +106,10 @@
                     <li><a href="index.php">Inicio</a></li>
                     <?php
                     if (isset($_SESSION["rol"])) {
-                        if ($_SESSION["rol"] == "admin")
+                        if ($_SESSION["rol"] == "admin"){
                             echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                            echo "<li><a href='modificarCantidadProductos.php'>Modicar Cantidad de Productos</a></li>";
+                        }
                     }
                     ?>
                     
