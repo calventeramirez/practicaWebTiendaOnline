@@ -45,7 +45,7 @@ CREATE TABLE pedidos(
 );
 
 CREATE TABLE lineasPedidos(
-	lineaPedido NUMERIC(2) NOT NULL PRIMARY KEY,
+	lineaPedido NUMERIC(2) NOT NULL,
     idProducto INTEGER(8) NOT NULL,
     idPedido INTEGER(8) NOT NULL,
     precioUnitario NUMERIC(7,2) NOT NULL,
