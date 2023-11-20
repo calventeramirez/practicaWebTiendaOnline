@@ -44,15 +44,41 @@
             }
 
             if($idCesta != -1 && isset($cantidad)){
-                $sqlInsertarCesta = "INSERT INTO productosCestas (idProducto, idCesta, cantidad) VALUES ($idProducto, $idCesta, $cantidad)";
-                $resultado = $conexion->query($sqlInsertarCesta);
-                $acierto ="Producto añadido a la cesta";
-                $sqlAux = "SELECT precio FROM productos WHERE idProducto = '$idProducto'";
-                $res_precio = $conexion->query($sqlAux);
-                $fila_precio =  $res_precio->fetch_assoc();
-                $precio = $fila_precio["precio"];
-                $sqlPrecioTotal = "UPDATE Cestas SET precioTotal = precioTotal + ($precio * $cantidad) WHERE idCesta = $idCesta";
-                $conexion-> query($sqlPrecioTotal);
+                $sqlCantida = "SELECT cantidad FROM productos WHERE idProducto = $idProducto";
+                $cantidadTotal = $conexion->query($sqlCantida)->fetch_assoc()["cantidad"];
+                $sqlcantidadEnCesta = "SELECT cantidad FROM productosCestas WHERE idProducto = $idProducto AND idCesta = $idCesta";
+                $cantidadEnCesta = $conexion->query($sqlcantidadEnCesta)->fetch_assoc()["cantidad"];
+                if($cantidad > 0 && $cantidad <= $cantidadTotal){
+
+                    if($cantidadEnCesta == 0){
+                        $sqlInsertarCesta = "INSERT INTO productosCestas (idProducto, idCesta, cantidad) VALUES ($idProducto, $idCesta, $cantidad)";
+                        $resultado = $conexion->query($sqlInsertarCesta);
+                    }else{
+                        $cantidadEnCesta += $cantidad;
+                        $sqlInsertarCesta = "UPDATE productosCestas SET cantidad = $cantidadEnCesta WHERE idProducto = $idProducto AND idCesta = $idCesta";
+                        $resultado = $conexion->query($sqlInsertarCesta);
+
+                    }
+                    $acierto ="Producto añadido a la cesta";
+                    $sqlAux = "SELECT precio FROM productos WHERE idProducto = '$idProducto'";
+                    $res_precio = $conexion->query($sqlAux);
+                    $fila_precio =  $res_precio->fetch_assoc();
+                    $precio = $fila_precio["precio"];
+                    $precioCantidad = $precio * $cantidad;
+                    $sqlPrecioTotal = "UPDATE Cestas SET precioTotal = precioTotal + $precioCantidad WHERE idCesta = $idCesta";
+                    $conexion-> query($sqlPrecioTotal);
+                    $cantidadTotal -= $cantidad;
+                    $sqlModCantidad  = "UPDATE productos SET cantidad = $cantidadTotal WHERE idProducto = $idProducto";
+                    $conexion->query($sqlModCantidad);
+                    header("Location: index.php");
+                }else{
+                    ?>
+                        <div class="alert alert-danger" role="alert">
+                            Error no se ha podido introducir el productos debido a que no hay suficiente cantidad.
+                        </div>
+                    <?php
+                }
+               
             }
         }
     }
@@ -71,8 +97,10 @@
                     <li><a href="index.php">Inicio</a></li>
                     <?php
                     if (isset($_SESSION["rol"])) {
-                        if ($_SESSION["rol"] == "admin")
+                        if ($_SESSION["rol"] == "admin"){
                             echo "<li><a href='formularioAnadirProducto.php'>Añadir Productos</a></li>";
+                            echo "<li><a href='modificarCantidadProductos.php'>Modicar Cantidad de Productos</a></li>";
+                        }
                     }
                     ?>
                     
@@ -102,7 +130,7 @@
             <?php
             }
         ?>
-        <table class="table table-secondary table-hover">
+        <table class="table table-secondary table-hover text-center">
             <thead class="table table-striped">
                 <tr>
                     <th>ID</th>
@@ -124,8 +152,8 @@
                     <tr>
                     <td><?php echo $producto->idProducto; ?></td>
                     <td><?php echo $producto->nombreProducto; ?></td>
-                    <td><?php echo $producto->precio; ?></td>
-                    <td><?php echo $producto->descripcion; ?></td>
+                    <td><?php echo $producto->precio; ?>€</td>
+                    <td class = "text-start"><?php echo $producto->descripcion; ?></td>
                     <td><?php echo $producto->cantidad; ?></td>
                     <td><img src =  "<?php echo $producto->imagen; ?>"  alt ='' width = '50%' heigth = '50%'></td>
                     <?php
